@@ -39,7 +39,20 @@ export const TransactionProvider = ({ children }) => {
         console.log('No accounts found.');
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
+
+      throw new Error("No ethereum object.");
+    }
+  }
+
+  const checkIfTransactionExist = async () => {
+    try {
+      const transactionContract = getEthereumContract();
+      const transactionCount = await transactionContract.getTransactionCount();
+
+      window.localStorage.setItem("transactionCount", transactionCount);
+    } catch (error) {
+      console.log(error);
 
       throw new Error("No ethereum object.");
     }
@@ -53,7 +66,7 @@ export const TransactionProvider = ({ children }) => {
 
       setCurrentAccount(accounts[0]);
     } catch (error) {
-      console.log(error)
+      console.log(error);
 
       throw new Error("No ethereum object.");
     }
@@ -89,7 +102,7 @@ export const TransactionProvider = ({ children }) => {
 
       setTransactionCount(transactionCount.toNumber());
     } catch (error) {
-      console.log(error)
+      console.log(error);
 
       throw new Error("No ethereum object.");
     }
@@ -97,6 +110,7 @@ export const TransactionProvider = ({ children }) => {
 
   useEffect(() => {
     checkIfWalletIsConnected();
+    checkIfTransactionExist();
   }, []);
 
   return (
